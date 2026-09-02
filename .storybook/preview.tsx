@@ -1,7 +1,7 @@
 import type { Preview } from '@storybook/nextjs-vite'
-// @ts-ignore -- CSS is bundled by Storybook/Vite at runtime.
+// @ts-expect-error -- CSS is bundled by Storybook/Vite at runtime.
 import '../app/globals.css'
-// @ts-ignore -- CSS is bundled by Storybook/Vite at runtime.
+// @ts-expect-error -- CSS is bundled by Storybook/Vite at runtime.
 import './preview.css'
 
 const preview: Preview = {

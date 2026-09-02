@@ -1,126 +1,69 @@
 @import "tailwindcss";
 
-@layer base {
-  :root {
-    --neutral-800: 19 32 49;
-    --neutral-700: 26 42 65;
-    --neutral-500: 32 53 81;
-    --neutral-400: 108 126 149;
-    --neutral-300: 191 206 224;
-    --neutral-200: 224 233 244;
-    --neutral-100: 246 248 252;
-    --neutral-0: 255 255 255;
-
-    --green-900: 1 128 48;
-    --green-800: 1 153 57;
-    --green-700: 20 173 77;
-    --green-600: 59 186 106;
-    --green-500: 99 200 136;
-    --green-400: 145 221 173;
-    --green-300: 193 244 212;
-    --green-200: 225 250 234;
-    --green-100: 235 251 241;
-
-    --danger-900: 188 28 28;
-    --danger-800: 225 33 33;
-    --danger-700: 245 53 53;
-    --danger-600: 247 86 86;
-    --danger-500: 255 127 127;
-    --danger-400: 250 164 164;
-    --danger-300: 255 201 201;
-    --danger-200: 255 227 227;
-    --danger-100: 254 235 235;
-
-    --blue-900: 15 24 62;
-    --blue-800: 23 36 93;
-    --blue-700: 38 59 155;
-    --blue-600: 38 59 155;
-    --blue-500: 46 71 186;
-    --blue-400: 116 132 209;
-    --blue-300: 150 163 220;
-    --blue-200: 185 194 232;
-    --blue-100: 213 218 241;
-
-    --light-blue-900: 23 81 208;
-    --light-blue-800: 66 114 221;
-    --light-blue-700: 108 146 228;
-    --light-blue-600: 148 176 236;
-    --light-blue-500: 184 202 242;
-    --light-blue-400: 214 224 247;
-    --light-blue-300: 224 233 244;
-    --light-blue-200: 245 248 253;
-    --light-blue-100: 253 253 255;
-
-    --orange-900: 196 126 10;
-    --orange-800: 236 152 12;
-    --orange-700: 255 171 31;
-    --orange-600: 255 185 69;
-    --orange-500: 255 213 143;
-    --orange-400: 255 213 143;
-    --orange-300: 255 233 186;
-    --orange-200: 255 241 218;
-    --orange-100: 255 246 231;
-
-    --primary-darkest: var(--blue-800);
-    --primary-darker: var(--blue-700);
-    --primary-dark: var(--blue-600);
-    --primary-base: var(--blue-500);
-    --primary-light: var(--blue-400);
-    --primary-lighter: var(--blue-300);
-    --primary-lightest: var(--blue-200);
-    --primary-bright: var(--blue-100);
-
-    --info-darkest: var(--light-blue-800);
-    --info-darker: var(--light-blue-700);
-    --info-dark: var(--light-blue-600);
-    --info-base: var(--light-blue-500);
-    --info-light: var(--light-blue-400);
-    --info-lighter: var(--light-blue-300);
-    --info-lightest: var(--light-blue-200);
-    --info-bright: var(--light-blue-100);
-
-    --success-darkest: var(--green-800);
-    --success-darker: var(--green-700);
-    --success-dark: var(--green-600);
-    --success-base: var(--green-500);
-    --success-light: var(--green-400);
-    --success-lighter: var(--green-300);
-    --success-lightest: var(--green-200);
-    --success-bright: var(--green-100);
-
-    --warning-darkest: var(--orange-800);
-    --warning-darker: var(--orange-700);
-    --warning-dark: var(--orange-600);
-    --warning-base: var(--orange-500);
-    --warning-light: var(--orange-400);
-    --warning-lighter: var(--orange-300);
-    --warning-lightest: var(--orange-200);
-    --warning-bright: var(--orange-100);
-
-    --danger-darkest: var(--danger-800);
-    --danger-darker: var(--danger-700);
-    --danger-dark: var(--danger-600);
-    --danger-base: var(--danger-500);
-    --danger-light: var(--danger-400);
-    --danger-lighter: var(--danger-300);
-    --danger-lightest: var(--danger-200);
-    --danger-bright: var(--danger-100);
-
-    --text-primary: var(--neutral-500);
-    --text-secondary: var(--neutral-400);
-    --text-disable: var(--neutral-300);
-    --text-white: var(--neutral-0);
-  }
-}
-
 :root {
   --background: #ffffff;
   --foreground: #171717;
 }
 
-@theme inline {
+@theme {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+
+  --color-primary-darkest: rgb(23 36 93);
+  --color-primary-darker: rgb(38 59 155);
+  --color-primary-dark: rgb(38 59 155);
+  --color-primary-base: rgb(46 71 186);
+  --color-primary-light: rgb(116 132 209);
+  --color-primary-lighter: rgb(150 163 220);
+  --color-primary-lightest: rgb(185 194 232);
+  --color-primary-bright: rgb(213 218 241);
+
+  --color-success-darkest: rgb(1 153 57);
+  --color-success-darker: rgb(20 173 77);
+  --color-success-dark: rgb(59 186 106);
+  --color-success-base: rgb(99 200 136);
+  --color-success-light: rgb(145 221 173);
+  --color-success-lighter: rgb(193 244 212);
+  --color-success-lightest: rgb(225 250 234);
+  --color-success-bright: rgb(235 251 241);
+
+  --color-info-darkest: rgb(66 114 221);
+  --color-info-darker: rgb(108 146 228);
+  --color-info-dark: rgb(148 176 236);
+  --color-info-base: rgb(184 202 242);
+  --color-info-light: rgb(214 224 247);
+  --color-info-lighter: rgb(224 233 244);
+  --color-info-lightest: rgb(245 248 253);
+  --color-info-bright: rgb(253 253 255);
+
+  --color-warning-darkest: rgb(236 152 12);
+  --color-warning-darker: rgb(255 171 31);
+  --color-warning-dark: rgb(255 185 69);
+  --color-warning-base: rgb(255 213 143);
+  --color-warning-light: rgb(255 213 143);
+  --color-warning-lighter: rgb(255 233 186);
+  --color-warning-lightest: rgb(255 241 218);
+  --color-warning-bright: rgb(255 246 231);
+
+  --color-danger-darkest: rgb(225 33 33);
+  --color-danger-darker: rgb(245 53 53);
+  --color-danger-dark: rgb(247 86 86);
+  --color-danger-base: rgb(255 127 127);
+  --color-danger-light: rgb(250 164 164);
+  --color-danger-lighter: rgb(255 201 201);
+  --color-danger-lightest: rgb(255 227 227);
+  --color-danger-bright: rgb(254 235 235);
+
+  --color-text-primary: rgb(32 53 81);
+  --color-text-secondary: rgb(108 126 149);
+  --color-text-disable: rgb(191 206 224);
+  --color-text-white: rgb(255 255 255);
+
+  --color-stroke-primary: var(--light-blue-300);
+  --color-stroke-secondary: var(--neutral-300);
+  --color-stroke-tertiary: var(--neutral-400);
+  --color-stroke-black: var(--neutral-500);
+  --color-stroke-white: var(--neutral-0);
 }
 
 @media (prefers-color-scheme: dark) {
