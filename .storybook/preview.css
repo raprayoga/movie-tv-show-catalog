@@ -64,6 +64,9 @@
   --color-stroke-tertiary: var(--neutral-400);
   --color-stroke-black: var(--neutral-500);
   --color-stroke-white: var(--neutral-0);
+
+  --color-bg-primary: var(--neutral-100);
+  --color-bg-secondary: var(--neutral-200);
 }
 
 @media (prefers-color-scheme: dark) {

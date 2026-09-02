@@ -92,6 +92,16 @@ const meta: Meta<typeof Button> = {
 				},
 			},
 		},
+		loading: {
+			control: "boolean",
+			description:
+				"If set to true, shows a loading spinner and changes the button text to 'Memproses...'",
+			table: {
+				defaultValue: {
+					summary: "false",
+				},
+			},
+		},
 		ref: {
 			control: false,
 			description:
@@ -170,6 +180,20 @@ export const Link: Story = {
 	render: (args) => (
 		<Button {...args}>
 			<a href="http://localhost:6006/">Login</a>
+		</Button>
+	),
+}
+
+export const Loading: Story = {
+	args: {
+		loading: true,
+	},
+}
+
+export const LoadingWithIcon: Story = {
+	render: (args) => (
+		<Button {...args} loading={true} leftIcon={<FastForward />}>
+			Button
 		</Button>
 	),
 }
