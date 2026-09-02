@@ -1,0 +1,137 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --neutral-800: 19 32 49;
+    --neutral-700: 26 42 65;
+    --neutral-500: 32 53 81;
+    --neutral-400: 108 126 149;
+    --neutral-300: 191 206 224;
+    --neutral-200: 224 233 244;
+    --neutral-100: 246 248 252;
+    --neutral-0: 255 255 255;
+
+    --green-900: 1 128 48;
+    --green-800: 1 153 57;
+    --green-700: 20 173 77;
+    --green-600: 59 186 106;
+    --green-500: 99 200 136;
+    --green-400: 145 221 173;
+    --green-300: 193 244 212;
+    --green-200: 225 250 234;
+    --green-100: 235 251 241;
+
+    --danger-900: 188 28 28;
+    --danger-800: 225 33 33;
+    --danger-700: 245 53 53;
+    --danger-600: 247 86 86;
+    --danger-500: 255 127 127;
+    --danger-400: 250 164 164;
+    --danger-300: 255 201 201;
+    --danger-200: 255 227 227;
+    --danger-100: 254 235 235;
+
+    --blue-900: 15 24 62;
+    --blue-800: 23 36 93;
+    --blue-700: 38 59 155;
+    --blue-600: 38 59 155;
+    --blue-500: 46 71 186;
+    --blue-400: 116 132 209;
+    --blue-300: 150 163 220;
+    --blue-200: 185 194 232;
+    --blue-100: 213 218 241;
+
+    --light-blue-900: 23 81 208;
+    --light-blue-800: 66 114 221;
+    --light-blue-700: 108 146 228;
+    --light-blue-600: 148 176 236;
+    --light-blue-500: 184 202 242;
+    --light-blue-400: 214 224 247;
+    --light-blue-300: 224 233 244;
+    --light-blue-200: 245 248 253;
+    --light-blue-100: 253 253 255;
+
+    --orange-900: 196 126 10;
+    --orange-800: 236 152 12;
+    --orange-700: 255 171 31;
+    --orange-600: 255 185 69;
+    --orange-500: 255 213 143;
+    --orange-400: 255 213 143;
+    --orange-300: 255 233 186;
+    --orange-200: 255 241 218;
+    --orange-100: 255 246 231;
+
+    --primary-darkest: var(--blue-800);
+    --primary-darker: var(--blue-700);
+    --primary-dark: var(--blue-600);
+    --primary-base: var(--blue-500);
+    --primary-light: var(--blue-400);
+    --primary-lighter: var(--blue-300);
+    --primary-lightest: var(--blue-200);
+    --primary-bright: var(--blue-100);
+
+    --info-darkest: var(--light-blue-800);
+    --info-darker: var(--light-blue-700);
+    --info-dark: var(--light-blue-600);
+    --info-base: var(--light-blue-500);
+    --info-light: var(--light-blue-400);
+    --info-lighter: var(--light-blue-300);
+    --info-lightest: var(--light-blue-200);
+    --info-bright: var(--light-blue-100);
+
+    --success-darkest: var(--green-800);
+    --success-darker: var(--green-700);
+    --success-dark: var(--green-600);
+    --success-base: var(--green-500);
+    --success-light: var(--green-400);
+    --success-lighter: var(--green-300);
+    --success-lightest: var(--green-200);
+    --success-bright: var(--green-100);
+
+    --warning-darkest: var(--orange-800);
+    --warning-darker: var(--orange-700);
+    --warning-dark: var(--orange-600);
+    --warning-base: var(--orange-500);
+    --warning-light: var(--orange-400);
+    --warning-lighter: var(--orange-300);
+    --warning-lightest: var(--orange-200);
+    --warning-bright: var(--orange-100);
+
+    --danger-darkest: var(--danger-800);
+    --danger-darker: var(--danger-700);
+    --danger-dark: var(--danger-600);
+    --danger-base: var(--danger-500);
+    --danger-light: var(--danger-400);
+    --danger-lighter: var(--danger-300);
+    --danger-lightest: var(--danger-200);
+    --danger-bright: var(--danger-100);
+
+    --text-primary: var(--neutral-500);
+    --text-secondary: var(--neutral-400);
+    --text-disable: var(--neutral-300);
+    --text-white: var(--neutral-0);
+  }
+}
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
