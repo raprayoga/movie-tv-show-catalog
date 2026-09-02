@@ -1,4 +1,8 @@
-@import "tailwindcss";
+@layer theme, base, components, utilities;
+
+@import "tailwindcss" layer(base);
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities);
 
 @layer base {
     :root {
@@ -113,6 +117,19 @@
     --color-text-secondary: var(--neutral-400);
     --color-text-disable: var(--neutral-300);
     --color-text-white: var(--neutral-0);
+
+    --text-primary: var(--neutral-0);
+    --text-secondary: var(--neutral-300);
+    --text-disable: var(--neutral-400);
+    --text-white: var(--neutral-500);
+
+    --color-stroke-primary: var(--light-blue-300);
+    --color-stroke-secondary: var(--neutral-300);
+    --color-stroke-tertiary: var(--neutral-400);
+    --color-stroke-black: var(--neutral-500);
+    --color-stroke-white: var(--neutral-0);
+
+    --color-bg-primary: var(--neutral-100);
 }
 
 :root {
@@ -136,6 +153,6 @@
 
 body {
     background: var(--background);
-    color: var(--foreground);
+    color: var(--text-primary);
     font-family: Arial, Helvetica, sans-serif;
 }

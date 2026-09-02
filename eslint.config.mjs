@@ -16,6 +16,10 @@ const eslintConfig = defineConfig([
     "build/**",
     "storybook-static/**",
     "next-env.d.ts",
+    // Ignore skill scripts
+    ".opencode/**",
+    // Ignore shared components (legacy)
+    "shared/**",
   ]),
   ...storybook.configs["flat/recommended"]
 ]);
