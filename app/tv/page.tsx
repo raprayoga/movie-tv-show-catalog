@@ -2,13 +2,12 @@
 
 import useSWR from "swr"
 
-import TVHero from "./components/Hero"
+import Hero from "@/shared/components/Hero"
 import ContentSection from "@/shared/components/ContentSection"
 import {
 	TMDBMediaItem,
 	TMDbTVListResponse,
 } from "@/shared/interface/tmdb"
-import { Navbar } from "@/shared/components/Navbar"
 
 type TVCategory = "airing-today" | "top-rated" | "on-the-air" | "popular"
 
@@ -70,43 +69,38 @@ export default function TVShowPage({ onItemClick }: TVShowPageProps) {
 	}))
 
 	return (
-		<>
-			<Navbar />
-			<main className="flex flex-1 flex-col">
-				<div className="min-h-screen bg-bg-primary">
-					<TVHero items={airingTodayItems} isLoading={isLoadingAiringToday} onItemClick={onItemClick} />
+		<div className="min-h-screen bg-bg-primary">
+			<Hero items={airingTodayItems} isLoading={isLoadingAiringToday} onItemClick={onItemClick} />
 
-					<div className="mt-6">
-						<ContentSection
-							title="Top Rated"
-							items={topRatedItems}
-							isLoading={isLoadingTopRated}
-							onItemClick={onItemClick}
-						/>
+			<div className="mt-6">
+				<ContentSection
+					title="Top Rated"
+					items={topRatedItems}
+					isLoading={isLoadingTopRated}
+					onItemClick={onItemClick}
+				/>
 
-						<ContentSection
-							title="Airing Today"
-							items={airingTodayItems}
-							isLoading={isLoadingAiringToday}
-							onItemClick={onItemClick}
-						/>
+				<ContentSection
+					title="Airing Today"
+					items={airingTodayItems}
+					isLoading={isLoadingAiringToday}
+					onItemClick={onItemClick}
+				/>
 
-						<ContentSection
-							title="On The Air"
-							items={onTheAirItems}
-							isLoading={isLoadingOnTheAir}
-							onItemClick={onItemClick}
-						/>
+				<ContentSection
+					title="On The Air"
+					items={onTheAirItems}
+					isLoading={isLoadingOnTheAir}
+					onItemClick={onItemClick}
+				/>
 
-						<ContentSection
-							title="Popular"
-							items={popularItems}
-							isLoading={isLoadingPopular}
-							onItemClick={onItemClick}
-						/>
-					</div>
-				</div>
-			</main>
-		</>
+				<ContentSection
+					title="Popular"
+					items={popularItems}
+					isLoading={isLoadingPopular}
+					onItemClick={onItemClick}
+				/>
+			</div>
+		</div>
 	)
 }
