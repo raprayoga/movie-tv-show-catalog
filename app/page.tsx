@@ -164,7 +164,7 @@ export default function HomePage() {
 				maxItems={6}
 				showMediaType
 				onItemClick={handleItemClick}
-				onWatchlistToggle={handleWatchlistToggle}
+				onWatchlistToggle={isAuthenticated ? handleWatchlistToggle : undefined}
 				watchlistItemId={heroWatchlistId}
 				watchlistItemType={heroWatchlistType}
 				isInWatchlist={heroIsInWatchlist}
