@@ -8,7 +8,6 @@ import {
 	Film,
 	TvIcon,
 	Bookmark,
-	User,
 	LogOut,
 	Home,
 	X,
@@ -20,9 +19,9 @@ import {
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuItem,
-	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "@components/Dropdown"
+import { useCurrentUser } from "@/shared/hooks/use-current-user"
 
 interface NavLinkProps {
 	href: string
@@ -50,11 +49,8 @@ const NAV_LINKS = [
 	{ href: "#", label: "TV", icon: <TvIcon className="h-5 w-5" /> },
 ]
 
-interface NavbarProps {
-	isLoggedIn?: boolean
-}
-
-export function Navbar({ isLoggedIn = false }: NavbarProps) {
+export function Navbar() {
+	const { user, isAuthenticated, isLoading, login, logout } = useCurrentUser()
 	const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false)
 	const mobileMenuRef = React.useRef<HTMLDivElement>(null)
 
@@ -76,6 +72,46 @@ export function Navbar({ isLoggedIn = false }: NavbarProps) {
 		document.addEventListener("keydown", handleEscape)
 		return () => document.removeEventListener("keydown", handleEscape)
 	}, [isMobileMenuOpen])
+
+	let accountActions: React.ReactNode
+	if (isAuthenticated && user) {
+		accountActions = (
+			<div className="items-center gap-2 hidden md:flex">
+				<Button type="button" aria-label="Favorites" variant="text" btnType="primary" size="sm" asChild>
+					<Heart className="h-5 w-5" />
+				</Button>
+				<Button type="button" aria-label="Watchlist" variant="text" btnType="primary" size="sm" asChild>
+					<Bookmark className="h-5 w-5" />
+				</Button>
+
+				<DropdownMenu>
+					<DropdownMenuTrigger asChild>
+						<button
+							type="button"
+							className="ml-2 rounded-full focus:outline-none focus:ring-2 focus:ring-primary-base focus:ring-offset-2"
+							aria-label="User menu"
+						>
+							<Avatar fallback={user.username.slice(0, 2).toUpperCase()} size="sm" />
+						</button>
+					</DropdownMenuTrigger>
+					<DropdownMenuContent align="end" className="w-48">
+						<DropdownMenuItem variant="destructive" className="text-danger-darker" onClick={logout}>
+							<LogOut className="h-4 w-4" />
+							Logout
+						</DropdownMenuItem>
+					</DropdownMenuContent>
+				</DropdownMenu>
+			</div>
+		)
+	} else {
+		accountActions = (
+			<div className="hidden md:block">
+				<Button variant="outline" btnType="primary" size="sm" onClick={login}>
+					Login with TMDB
+				</Button>
+			</div>
+		)
+	}
 
 	return (
 		<nav className="sticky top-0 z-50 w-full border-b border-stroke-primary bg-white" aria-label="Main navigation">
@@ -103,61 +139,18 @@ export function Navbar({ isLoggedIn = false }: NavbarProps) {
 							</a>
 						</Button>
 
-						{isLoggedIn ? (
-							<>
-								<Button variant="text" btnType="primary" size="sm" asChild>
-									<a href="#" aria-label="Favorites">
-										<Heart className="h-5 w-5" />
-									</a>
-								</Button>
-								<Button variant="text" btnType="primary" size="sm" asChild>
-									<a href="#" aria-label="Watchlist">
-										<Bookmark className="h-5 w-5" />
-									</a>
-								</Button>
-
-								<DropdownMenu>
-									<DropdownMenuTrigger asChild>
-										<button
-											type="button"
-											className="ml-2 rounded-full focus:outline-none focus:ring-2 focus:ring-primary-base focus:ring-offset-2"
-											aria-label="User menu"
-										>
-											<Avatar fallback="JD" size="sm" />
-										</button>
-									</DropdownMenuTrigger>
-									<DropdownMenuContent align="end" className="w-48">
-										<DropdownMenuItem>
-											<User className="h-4 w-4" />
-											Profile
-										</DropdownMenuItem>
-										<DropdownMenuItem>
-											<Heart className="h-4 w-4" />
-											Favorites
-										</DropdownMenuItem>
-										<DropdownMenuItem>
-											<Bookmark className="h-4 w-4" />
-											Watchlist
-										</DropdownMenuItem>
-										<DropdownMenuSeparator />
-										<DropdownMenuItem variant="destructive">
-											<LogOut className="h-4 w-4" />
-											Log out
-										</DropdownMenuItem>
-									</DropdownMenuContent>
-								</DropdownMenu>
-							</>
-						) : (
-							<div className="hidden sm:block">
-								<Button variant="outline" btnType="primary" size="sm">
-									Login
-								</Button>
+						{isLoading ? (
+							<div className="hidden md:block">
+								<Avatar fallback="?" size="sm" />
 							</div>
+						) : (
+							accountActions
 						)}
 
-						<button
+						<Button
 							type="button"
-							className="p-2 rounded-lg text-text-secondary transition-colors hover:bg-primary-lightest focus:outline-none focus:ring-2 focus:ring-primary-base md:hidden"
+							variant="text"
+							className="md:hidden"
 							onClick={handleMobileMenuToggle}
 							aria-expanded={isMobileMenuOpen}
 							aria-controls="mobile-menu"
@@ -168,7 +161,7 @@ export function Navbar({ isLoggedIn = false }: NavbarProps) {
 							) : (
 								<Menu className="h-5 w-5" />
 							)}
-						</button>
+						</Button>
 					</div>
 				</div>
 			</div>
@@ -201,7 +194,7 @@ export function Navbar({ isLoggedIn = false }: NavbarProps) {
 							</a>
 						))}
 
-						{isLoggedIn ? (
+						{isAuthenticated && user ? (
 							<>
 								<a
 									href="#"
@@ -219,11 +212,23 @@ export function Navbar({ isLoggedIn = false }: NavbarProps) {
 									<Bookmark className="h-5 w-5" />
 									Watchlist
 								</a>
+								<Button
+									type="button"
+									btnType="destructive"
+									onClick={() => {
+										logout()
+										handleMobileMenuClose()
+									}}
+									className="w-full"
+									leftIcon={<LogOut className="h-5 w-5" />}
+								>
+									Logout
+								</Button>
 							</>
 						) : (
 							<div className="pt-4">
-								<Button variant="solid" btnType="primary" className="w-full">
-									Login
+								<Button variant="solid" btnType="primary" className="w-full" onClick={login}>
+									Login with TMDB
 								</Button>
 							</div>
 						)}
