@@ -1,5 +1,7 @@
 "use client"
 
+import * as React from "react"
+import { useRouter } from "next/navigation"
 import useSWR from "swr"
 
 import Hero from "@/shared/components/Hero"
@@ -12,18 +14,20 @@ import {
 type MovieCategory = "now-playing" | "top-rated" | "upcoming" | "popular"
 
 const fetcher = async (key: MovieCategory): Promise<TMDbMovieListResponse> => {
-	const res = await fetch(`/api/movies/${key}`)
+	const res = await fetch(`/api/movies/list/${key}`)
 	if (!res.ok) {
 		throw new Error(`Failed to fetch ${key}`)
 	}
 	return res.json()
 }
 
-interface HomePageProps {
-	onItemClick?: (item: TMDBMediaItem) => void
-}
+export default function MoviesPage() {
+	const router = useRouter()
 
-export default function HomePage({ onItemClick }: HomePageProps) {
+	const handleItemClick = (item: TMDBMediaItem) => {
+		router.push(`/movies/${item.id}`)
+	}
+
 	const { data: nowPlaying, isLoading: isLoadingNowPlaying } = useSWR<TMDbMovieListResponse>(
 		"now-playing",
 		() => fetcher("now-playing")
@@ -66,35 +70,35 @@ export default function HomePage({ onItemClick }: HomePageProps) {
 
 	return (
 		<div className="min-h-screen bg-bg-primary">
-			<Hero items={nowPlayingItems} isLoading={isLoadingNowPlaying} onItemClick={onItemClick} />
+			<Hero items={nowPlayingItems} isLoading={isLoadingNowPlaying} onItemClick={handleItemClick} />
 
 			<div className="mt-6">
 				<ContentSection
 					title="Top Rated"
 					items={topRatedItems}
 					isLoading={isLoadingTopRated}
-					onItemClick={onItemClick}
+					onItemClick={handleItemClick}
 				/>
 
 				<ContentSection
 					title="Upcoming"
 					items={upcomingItems}
 					isLoading={isLoadingUpcoming}
-					onItemClick={onItemClick}
+					onItemClick={handleItemClick}
 				/>
 
 				<ContentSection
 					title="Popular"
 					items={popularItems}
 					isLoading={isLoadingPopular}
-					onItemClick={onItemClick}
+					onItemClick={handleItemClick}
 				/>
 
 				<ContentSection
 					title="Now Playing"
 					items={nowPlayingItems}
 					isLoading={isLoadingNowPlaying}
-					onItemClick={onItemClick}
+					onItemClick={handleItemClick}
 				/>
 			</div>
 		</div>

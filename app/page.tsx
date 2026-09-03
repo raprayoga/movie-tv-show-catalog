@@ -1,5 +1,7 @@
 "use client"
 
+import * as React from "react"
+import { useRouter } from "next/navigation"
 import useSWR from "swr"
 
 import Hero from "@/shared/components/Hero"
@@ -14,7 +16,7 @@ type MovieCategory = "now-playing" | "top-rated" | "upcoming" | "popular"
 type TVCategory = "airing-today" | "top-rated" | "on-the-air" | "popular"
 
 const movieFetcher = async (key: MovieCategory): Promise<TMDbMovieListResponse> => {
-	const res = await fetch(`/api/movies/${key}`)
+	const res = await fetch(`/api/movies/list/${key}`)
 	if (!res.ok) {
 		throw new Error(`Failed to fetch movie ${key}`)
 	}
@@ -30,6 +32,13 @@ const tvFetcher = async (key: TVCategory): Promise<TMDbTVListResponse> => {
 }
 
 export default function HomePage() {
+	const router = useRouter()
+
+	const handleItemClick = (item: TMDBMediaItem) => {
+		const route = item.media_type === "tv" ? "/tv" : "/movies"
+		router.push(`${route}/${item.id}`)
+	}
+
 	const { data: nowPlayingMovies, isLoading: isLoadingNowPlaying } = useSWR<TMDbMovieListResponse>(
 		"home-now-playing",
 		() => movieFetcher("now-playing")
@@ -122,49 +131,56 @@ export default function HomePage() {
 
 	return (
 		<div className="min-h-screen bg-bg-primary">
-			<Hero items={heroItems} isLoading={isHeroLoading} maxItems={6} showMediaType />
+			<Hero items={heroItems} isLoading={isHeroLoading} maxItems={6} showMediaType onItemClick={handleItemClick} />
 
 			<div className="mt-6">
 				<ContentSection
 					title="Popular Movies"
 					items={popularMovieItems}
 					isLoading={isLoadingPopularMovies}
+					onItemClick={handleItemClick}
 				/>
 
 				<ContentSection
 					title="Top Rated TV Shows"
 					items={topRatedTVItems}
 					isLoading={isLoadingTopRatedTV}
+					onItemClick={handleItemClick}
 				/>
 
 				<ContentSection
 					title="Upcoming Movies"
 					items={upcomingMovieItems}
 					isLoading={isLoadingUpcomingMovies}
+					onItemClick={handleItemClick}
 				/>
 
 				<ContentSection
 					title="Popular TV Shows"
 					items={popularTVItems}
 					isLoading={isLoadingPopularTV}
+					onItemClick={handleItemClick}
 				/>
 
 				<ContentSection
 					title="Top Rated Movies"
 					items={topRatedMovieItems}
 					isLoading={isLoadingTopRatedMovies}
+					onItemClick={handleItemClick}
 				/>
 
 				<ContentSection
 					title="Airing Today"
 					items={airingTodayItems}
 					isLoading={isLoadingAiringToday}
+					onItemClick={handleItemClick}
 				/>
 
 				<ContentSection
 					title="Now Playing"
 					items={nowPlayingItems}
 					isLoading={isLoadingNowPlaying}
+					onItemClick={handleItemClick}
 				/>
 
 				<ContentSection
