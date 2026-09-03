@@ -102,3 +102,7 @@ export async function getTopRatedTV(): Promise<TMDbTVListResponse> {
 export async function getAiringTodayTV(): Promise<TMDbTVListResponse> {
 	return getTVList("/tv/airing_today")
 }
+
+export async function getOnTheAirTV(): Promise<TMDbTVListResponse> {
+	return getTVList("/tv/on_the_air")
+}
