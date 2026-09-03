@@ -3,10 +3,9 @@
 import * as React from "react"
 import { useRouter } from "next/navigation"
 import useSWR from "swr"
-import { Plus, Check } from "lucide-react"
 
-import { Button } from "@/shared/components/Button"
 import ContentSection from "@/shared/components/ContentSection"
+import WatchlistButton from "@/shared/components/WatchlistButton"
 import { useCurrentUser } from "@/shared/hooks/use-current-user"
 import {
 	type TMDBTVDetail,
@@ -40,7 +39,7 @@ export default function TVDetailPage({ params }: TVDetailPageProps) {
 	const resolvedParams = React.use(params)
 	const seriesId = resolvedParams.id
 
-	const { isAuthenticated, login } = useCurrentUser()
+	const { isAuthenticated } = useCurrentUser()
 
 	const handleItemClick = (item: TMDBMediaItem) => {
 		const route = item.media_type === "tv" ? "/tv" : "/movies"
@@ -67,35 +66,12 @@ export default function TVDetailPage({ params }: TVDetailPageProps) {
 		fetcher
 	)
 
-	const { data: accountState, isLoading: isLoadingAccountState } = useSWR<TMDbAccountState>(
+	const { data: accountState, isLoading: isLoadingAccountState, mutate: mutateAccountState } = useSWR<TMDbAccountState>(
 		isAuthenticated ? `/api/tv/${seriesId}/account-state` : null,
 		fetcher
 	)
 
-	const [watchlistLoading, setWatchlistLoading] = React.useState(false)
-
 	const isInWatchlist = accountState?.watchlist ?? false
-
-	const handleWatchlistToggle = async () => {
-		if (!isAuthenticated) {
-			login()
-			return
-		}
-
-		setWatchlistLoading(true)
-		try {
-			const res = await fetch(`/api/tv/${seriesId}/watchlist`, {
-				method: "POST",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify({ watchlist: !isInWatchlist }),
-			})
-			if (res.ok) {
-				// Revalidate account state
-			}
-		} finally {
-			setWatchlistLoading(false)
-		}
-	}
 
 	if (isLoadingTV) {
 		return <TVDetailSkeleton />
@@ -118,29 +94,16 @@ export default function TVDetailPage({ params }: TVDetailPageProps) {
 
 	return (
 		<article className="min-h-screen bg-bg-primary">
-			{isAuthenticated ? (
-				<TVHero tv={tv}>
-					<div className="flex items-center gap-3">
-						<Button
-							variant="solid"
-							btnType="primary"
-							onClick={handleWatchlistToggle}
-							loading={watchlistLoading || isLoadingAccountState}
-							leftIcon={
-								isInWatchlist ? (
-									<Check className="w-4 h-4" />
-								) : (
-									<Plus className="w-4 h-4" />
-								)
-							}
-						>
-							{isInWatchlist ? "In Watchlist" : "Add to Watchlist"}
-						</Button>
-					</div>
-				</TVHero>
-			) : (
-				<TVHero tv={tv} />
-			)}
+			<TVHero tv={tv}>
+				<WatchlistButton
+					mediaType="tv"
+					mediaId={tv.id}
+					isInWatchlist={isInWatchlist}
+					isLoading={isLoadingAccountState}
+					size="lg"
+					onSuccess={() => mutateAccountState()}
+				/>
+			</TVHero>
 
 			<div className="max-w-7xl mx-auto px-4">
 				{tv.seasons && tv.seasons.length > 0 && (

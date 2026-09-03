@@ -4,7 +4,6 @@ import * as React from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import {
-	Heart,
 	Search,
 	Menu,
 	Film,
@@ -77,15 +76,21 @@ export function Navbar() {
 	}, [isMobileMenuOpen])
 
 	let accountActions: React.ReactNode
+	const isWatchlistActive = pathname === "/watchlist"
 	if (isAuthenticated && user) {
 		accountActions = (
 			<div className="items-center gap-2 hidden md:flex">
-				<Button type="button" aria-label="Favorites" variant="text" btnType="primary" size="sm" asChild>
-					<Heart className="h-5 w-5" />
-				</Button>
-				<Button type="button" aria-label="Watchlist" variant="text" btnType="primary" size="sm" asChild>
+				<Link
+					href="/watchlist"
+					className={`relative px-3 py-2 text-sm font-medium transition-colors hover:text-primary-base ${
+						isWatchlistActive ? "text-primary-base" : "text-text-secondary"
+					}`}
+				>
 					<Bookmark className="h-5 w-5" />
-				</Button>
+					{isWatchlistActive && (
+						<span className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary-base" />
+					)}
+				</Link>
 
 				<DropdownMenu>
 					<DropdownMenuTrigger asChild>
@@ -194,11 +199,10 @@ export function Navbar() {
 								key={link.label}
 								href={link.href}
 								onClick={handleMobileMenuClose}
-								className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${
-									pathname === link.href
-										? "bg-primary-lightest text-primary-base"
-										: "text-text-secondary hover:bg-primary-lightest hover:text-primary-base"
-								}`}
+								className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${pathname === link.href
+									? "bg-primary-lightest text-primary-base"
+									: "text-text-secondary hover:bg-primary-lightest hover:text-primary-base"
+									}`}
 							>
 								{link.icon}
 								{link.label}
@@ -207,22 +211,18 @@ export function Navbar() {
 
 						{isAuthenticated && user ? (
 							<>
-								<a
-									href="#"
+								<Link
+									href="/watchlist"
 									onClick={handleMobileMenuClose}
-									className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-text-secondary transition-colors hover:bg-primary-lightest hover:text-primary-base"
-								>
-									<Heart className="h-5 w-5" />
-									Favorites
-								</a>
-								<a
-									href="#"
-									onClick={handleMobileMenuClose}
-									className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-text-secondary transition-colors hover:bg-primary-lightest hover:text-primary-base"
+									className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${
+										pathname === "/watchlist"
+											? "bg-primary-lightest text-primary-base"
+											: "text-text-secondary hover:bg-primary-lightest hover:text-primary-base"
+									}`}
 								>
 									<Bookmark className="h-5 w-5" />
 									Watchlist
-								</a>
+								</Link>
 								<Button
 									type="button"
 									btnType="destructive"

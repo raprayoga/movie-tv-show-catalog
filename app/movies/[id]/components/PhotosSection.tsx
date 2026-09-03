@@ -10,7 +10,6 @@ import { Skeleton } from "@/shared/components/Skeleton"
 import {
 	Dialog,
 	DialogContent,
-	DialogClose,
 } from "@/shared/components/Dialog"
 
 interface PhotosSectionProps {

@@ -23,6 +23,10 @@ interface ContentSectionProps {
 	}
 	spaceBetween?: number
 	onItemClick?: (item: TMDBMediaItem) => void
+	showWatchlistButton?: boolean
+	watchlistIds?: Set<number>
+	onWatchlistToggle?: (mediaType: "movie" | "tv", mediaId: number, newState: boolean) => void
+	isWatchlistLoading?: boolean
 }
 
 export default function ContentSection({
@@ -32,6 +36,10 @@ export default function ContentSection({
 	slidesPerView = { sm: 2, md: 3, lg: 4, xl: 5 },
 	spaceBetween = 16,
 	onItemClick,
+	showWatchlistButton = false,
+	watchlistIds,
+	onWatchlistToggle,
+	isWatchlistLoading = false,
 }: ContentSectionProps) {
 	if (isLoading) {
 		return (
@@ -74,20 +82,30 @@ export default function ContentSection({
 					}}
 					className="!-ml-4 !pl-4"
 				>
-					{items.map((item) => (
-						<SwiperSlide key={item.id} className="!flex-shrink-0">
-							<ContentCard
-								id={item.id}
-								title={item.title}
-								name={item.name}
-								poster_path={item.poster_path}
-								release_date={item.release_date}
-								first_air_date={item.first_air_date}
-								vote_average={item.vote_average}
-								onClick={() => onItemClick?.(item)}
-							/>
-						</SwiperSlide>
-					))}
+					{items.map((item) => {
+						const mediaType = item.media_type || "movie"
+						const isInWatchlist = watchlistIds?.has(item.id) ?? false
+
+						return (
+							<SwiperSlide key={item.id} className="!flex-shrink-0">
+								<ContentCard
+									id={item.id}
+									title={item.title}
+									name={item.name}
+									poster_path={item.poster_path}
+									release_date={item.release_date}
+									first_air_date={item.first_air_date}
+									vote_average={item.vote_average}
+									onClick={() => onItemClick?.(item)}
+									mediaType={mediaType}
+									showWatchlistButton={showWatchlistButton}
+									isInWatchlist={isInWatchlist}
+									onWatchlistToggle={(newState) => onWatchlistToggle?.(mediaType, item.id, newState)}
+									isWatchlistLoading={isWatchlistLoading}
+								/>
+							</SwiperSlide>
+						)
+					})}
 				</Swiper>
 
 				<button
