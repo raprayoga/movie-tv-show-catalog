@@ -82,9 +82,8 @@ export function Navbar() {
 			<div className="items-center gap-2 hidden md:flex">
 				<Link
 					href="/watchlist"
-					className={`relative px-3 py-2 text-sm font-medium transition-colors hover:text-primary-base ${
-						isWatchlistActive ? "text-primary-base" : "text-text-secondary"
-					}`}
+					className={`relative px-3 py-2 text-sm font-medium transition-colors hover:text-primary-base ${isWatchlistActive ? "text-primary-base" : "text-text-secondary"
+						}`}
 				>
 					<Bookmark className="h-5 w-5" />
 					{isWatchlistActive && (
@@ -145,11 +144,14 @@ export function Navbar() {
 					</div>
 
 					<div className="flex items-center gap-1 sm:gap-2">
-						<Button variant="text" btnType="primary" size="sm" asChild>
-							<a href="#" aria-label="Search">
-								<Search className="h-5 w-5" />
-							</a>
-						</Button>
+						<Link href="/search" aria-label="Search"
+							className="relative px-3 py-2 text-sm font-medium transition-colors hover:text-primary-base"
+						>
+							<Search className={`h-5 w-5 ${pathname === "/search" ? "text-primary-base" : ""}`} />
+							{pathname === "/search" && (
+								<span className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary-base" />
+							)}
+						</Link>
 
 						{isLoading ? (
 							<div className="hidden md:block">
@@ -178,74 +180,78 @@ export function Navbar() {
 				</div>
 			</div>
 
-			{isMobileMenuOpen && (
-				<div
-					ref={mobileMenuRef}
-					id="mobile-menu"
-					className="border-t border-stroke-primary bg-white md:hidden"
-				>
-					<div className="space-y-1 px-4 py-3">
-						<a
-							href="#"
-							onClick={handleMobileMenuClose}
-							className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-text-secondary transition-colors hover:bg-primary-lightest hover:text-primary-base"
-						>
-							<Search className="h-5 w-5" />
-							Search
-						</a>
-
-						{NAV_LINKS.map((link) => (
+			{
+				isMobileMenuOpen && (
+					<div
+						ref={mobileMenuRef}
+						id="mobile-menu"
+						className="border-t border-stroke-primary bg-white md:hidden"
+					>
+						<div className="space-y-1 px-4 py-3">
 							<Link
-								key={link.label}
-								href={link.href}
+								href="/search"
 								onClick={handleMobileMenuClose}
-								className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${pathname === link.href
+								className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${pathname === "/search"
 									? "bg-primary-lightest text-primary-base"
 									: "text-text-secondary hover:bg-primary-lightest hover:text-primary-base"
 									}`}
 							>
-								{link.icon}
-								{link.label}
+								<Search className="h-5 w-5" />
+								Search
 							</Link>
-						))}
 
-						{isAuthenticated && user ? (
-							<>
+							{NAV_LINKS.map((link) => (
 								<Link
-									href="/watchlist"
+									key={link.label}
+									href={link.href}
 									onClick={handleMobileMenuClose}
-									className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${
-										pathname === "/watchlist"
+									className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${pathname === link.href
+										? "bg-primary-lightest text-primary-base"
+										: "text-text-secondary hover:bg-primary-lightest hover:text-primary-base"
+										}`}
+								>
+									{link.icon}
+									{link.label}
+								</Link>
+							))}
+
+							{isAuthenticated && user ? (
+								<>
+									<Link
+										href="/watchlist"
+										onClick={handleMobileMenuClose}
+										className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${pathname === "/watchlist"
 											? "bg-primary-lightest text-primary-base"
 											: "text-text-secondary hover:bg-primary-lightest hover:text-primary-base"
-									}`}
-								>
-									<Bookmark className="h-5 w-5" />
-									Watchlist
-								</Link>
-								<Button
-									type="button"
-									btnType="destructive"
-									onClick={() => {
-										logout()
-										handleMobileMenuClose()
-									}}
-									className="w-full"
-									leftIcon={<LogOut className="h-5 w-5" />}
-								>
-									Logout
-								</Button>
-							</>
-						) : (
-							<div className="pt-4">
-								<Button variant="solid" btnType="primary" className="w-full" onClick={login}>
-									Login with TMDB
-								</Button>
-							</div>
-						)}
+											}`}
+									>
+										<Bookmark className="h-5 w-5" />
+										Watchlist
+									</Link>
+									<Button
+										type="button"
+										btnType="destructive"
+										onClick={() => {
+											logout()
+											handleMobileMenuClose()
+										}}
+										className="w-full"
+										leftIcon={<LogOut className="h-5 w-5" />}
+									>
+										Logout
+									</Button>
+								</>
+							) : (
+								<div className="pt-4">
+									<Button variant="solid" btnType="primary" className="w-full" onClick={login}>
+										Login with TMDB
+									</Button>
+								</div>
+							)}
+						</div>
 					</div>
-				</div>
-			)}
-		</nav>
+				)
+			}
+		</nav >
 	)
 }
