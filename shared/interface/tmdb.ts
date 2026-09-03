@@ -94,6 +94,62 @@ export interface TMDbTVListResponse {
 	total_results: number
 }
 
+export interface TMDbMovieCredits {
+	id: number
+	cast: TMDbCastMember[]
+	crew: TMDbCrewMember[]
+}
+
+export interface TMDbCastMember {
+	id: number
+	name: string
+	original_name: string
+	profile_path: string | null
+	character: string
+	credit_id: string
+	order: number
+}
+
+export interface TMDbCrewMember {
+	id: number
+	name: string
+	original_name: string
+	profile_path: string | null
+	credit_id: string
+	department: string
+	job: string
+}
+
+export interface TMDbMovieImages {
+	id: number
+	backdrops: TMDbImageData[]
+	posters: TMDbImageData[]
+}
+
+export interface TMDbImageData {
+	aspect_ratio: number
+	height: number
+	iso_639_1: string | null
+	file_path: string
+	vote_average: number
+	vote_count: number
+	width: number
+}
+
+export interface TMDbMovieRecommendations {
+	page: number
+	results: TMDBMovieResult[]
+	total_pages: number
+	total_results: number
+}
+
+export interface TMDbAccountState {
+	id: number
+	favorite: boolean
+	rated: boolean | { value: number }
+	watchlist: boolean
+}
+
 export type TMDBMediaType = "movie" | "tv"
 
 export interface TMDBMediaItem {
