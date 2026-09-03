@@ -6,6 +6,7 @@ import { mutate } from "swr"
 
 import { Button } from "@/shared/components/Button"
 import { useCurrentUser } from "@/shared/hooks/use-current-user"
+import { toast } from "@/shared/components/Sooner"
 import type { TMDBMediaType } from "@/shared/interface/tmdb"
 
 interface WatchlistButtonProps {
@@ -37,7 +38,7 @@ export default function WatchlistButton({
 	const { isAuthenticated, login } = useCurrentUser()
 	const [isMutating, setIsMutating] = React.useState(false)
 
-	const handleToggle = async (e: React.MouseEvent) => {
+		const handleToggle = async (e: React.MouseEvent) => {
 		e.stopPropagation()
 
 		if (!isAuthenticated) {
@@ -49,6 +50,7 @@ export default function WatchlistButton({
 
 		setIsMutating(true)
 		const newState = !isInWatchlist
+		const action = newState ? "Added to" : "Removed from"
 
 		try {
 			const endpoint = mediaType === "movie" ? `/api/movies/${mediaId}/watchlist` : `/api/tv/${mediaId}/watchlist`
@@ -63,7 +65,12 @@ export default function WatchlistButton({
 				mutate("/api/watchlist/tv")
 				onToggle?.(newState)
 				onSuccess?.()
+				toast.success(`${action} watchlist`)
+			} else {
+				toast.error("Failed to update watchlist")
 			}
+		} catch {
+			toast.error("Failed to update watchlist")
 		} finally {
 			setIsMutating(false)
 		}
