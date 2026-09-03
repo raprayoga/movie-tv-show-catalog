@@ -7,7 +7,7 @@ export async function GET(request: Request): Promise<Response> {
 	const requestToken = searchParams.get("request_token");
 
 	const response = NextResponse.redirect(
-		`${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}`
+		`${process.env.APP_URL || "http://localhost:3000"}`
 	);
 
 	if (approved !== "true" || !requestToken) {

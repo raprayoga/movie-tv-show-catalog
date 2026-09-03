@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { createRequestToken, buildAuthorizationUrl } from "@/shared/service/tmdb/auth";
 
 export async function GET(): Promise<Response> {
-	const callbackUrl = `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/api/auth/callback`;
+	const callbackUrl = `${process.env.APP_URL || "http://localhost:3000"}/api/auth/callback`;
 
 	const result = await createRequestToken();
 
