@@ -1,7 +1,13 @@
 import * as React from "react"
-import { ChevronDown } from "lucide-react"
 
 import { type TMDbSeason, type TMDbSeasonDetails } from "@/shared/interface/tmdb"
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "@/shared/components/Select"
 import { Skeleton } from "@/shared/components/Skeleton"
 import EpisodeCard from "./EpisodeCard"
 
@@ -65,21 +71,24 @@ export default function SeasonsSection({
 			<div className="flex items-center justify-between mb-6">
 				<h2 className="text-xl font-semibold text-text-primary">Episodes</h2>
 
-				<div className="relative">
-					<select
-						value={selectedSeason}
-						onChange={(e) => setSelectedSeason(Number(e.target.value))}
-						className="appearance-none bg-bg-secondary text-text-primary px-4 py-2 pr-10 rounded-lg border border-stroke-primary focus:outline-none focus:ring-2 focus:ring-primary-base cursor-pointer"
-						aria-label="Select season"
-					>
+				<Select
+					value={String(selectedSeason)}
+					onValueChange={(value) => setSelectedSeason(Number(value))}
+				>
+					<SelectTrigger className="w-48" aria-label="Select season">
+						<SelectValue placeholder="Select season" />
+					</SelectTrigger>
+					<SelectContent>
 						{displaySeasons.map((season) => (
-							<option key={season.season_number} value={season.season_number}>
+							<SelectItem
+								key={season.season_number}
+								value={String(season.season_number)}
+							>
 								{season.name}
-							</option>
+							</SelectItem>
 						))}
-					</select>
-					<ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-secondary pointer-events-none" />
-				</div>
+					</SelectContent>
+				</Select>
 			</div>
 
 			{isLoading && (

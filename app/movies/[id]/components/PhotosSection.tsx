@@ -7,6 +7,11 @@ import "swiper/css/navigation"
 
 import { getImageUrl, type TMDbMovieImages } from "@/shared/interface/tmdb"
 import { Skeleton } from "@/shared/components/Skeleton"
+import {
+	Dialog,
+	DialogContent,
+	DialogClose,
+} from "@/shared/components/Dialog"
 
 interface PhotosSectionProps {
 	images: TMDbMovieImages["backdrops"]
@@ -62,49 +67,44 @@ export default function PhotosSection({ images, isLoading }: PhotosSectionProps)
 				})}
 			</div>
 
-			{isDialogOpen && (
-				<dialog
-					className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4"
-					open
-					onClick={() => setIsDialogOpen(false)}
+			<Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+				<DialogContent
+					className="p-0 bg-transparent border-none w-[90vw] h-[90vh] max-w-none max-h-none flex items-center justify-center"
 				>
-					<div
-						className="relative max-w-5xl w-full"
-						onClick={(e) => e.stopPropagation()}
+					<button
+						className="absolute top-4 right-4 z-10 w-10 h-10 flex items-center justify-center bg-black/50 hover:bg-black/70 text-white rounded-full transition-colors"
+						onClick={() => setIsDialogOpen(false)}
 					>
-						<button
-							className="absolute -top-12 right-0 text-white/70 hover:text-white"
-							onClick={() => setIsDialogOpen(false)}
-						>
-							Close
-						</button>
+						X
+					</button>
+					<Swiper
+						modules={[Navigation]}
+						initialSlide={selectedIndex}
+						navigation
+						className="w-full h-full"
+						onSlideChange={(swiper) => setSelectedIndex(swiper.activeIndex)}
+					>
+						{displayImages.map((img, idx) => {
+							const imgUrl = getImageUrl(img.file_path, "original")
+							if (!imgUrl) return null
 
-						<Swiper
-							modules={[Navigation]}
-							initialSlide={selectedIndex}
-							navigation
-							className="bg-black rounded-lg overflow-hidden"
-						>
-							{displayImages.map((image, index) => {
-								const imageUrl = getImageUrl(image.file_path, "original")
-								if (!imageUrl) return null
-
-								return (
-									<SwiperSlide key={index}>
+							return (
+								<SwiperSlide key={idx} className="flex items-center justify-center">
+									<div className="relative w-full h-full">
 										<Image
-											src={imageUrl}
-											alt={`Backdrop ${index + 1}`}
-											width={1280}
-											height={720}
-											className="object-contain max-h-[80vh] w-auto mx-auto"
+											src={imgUrl}
+											alt={`Backdrop ${idx + 1}`}
+											fill
+											className="object-contain"
+											sizes="90vw"
 										/>
-									</SwiperSlide>
-								)
-							})}
-						</Swiper>
-					</div>
-				</dialog>
-			)}
+									</div>
+								</SwiperSlide>
+							)
+						})}
+					</Swiper>
+				</DialogContent>
+			</Dialog>
 		</section>
 	)
 }
