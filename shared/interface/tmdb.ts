@@ -186,3 +186,167 @@ export function formatYear(date: string | undefined): string {
 	if (!date) return ""
 	return date.split("-")[0] || ""
 }
+
+export interface TMDBTVDetail extends TMDbTVResult {
+	homepage: string | null
+	original_language: string
+	origin_country: string[]
+	production_companies: {
+		id: number
+		logo_path: string | null
+		name: string
+		origin_country: string
+	}[]
+	spoken_languages: {
+		iso_639_1: string
+		english_name: string
+		name: string
+	}[]
+	status: string
+	tagline: string | null
+	type: string
+	created_by: {
+		id: number
+		credit_id: string
+		name: string
+		original_name: string
+		gender: number
+		profile_path: string | null
+	}[]
+	networks: {
+		id: number
+		name: string
+		logo_path: string | null
+		origin_country: string
+	}[]
+	genres: TMDBGenre[]
+	episode_run_time: number[]
+	last_air_date: string
+	in_production: boolean
+	number_of_episodes: number
+	number_of_seasons: number
+	seasons: TMDbSeason[]
+}
+
+export interface TMDbSeason {
+	id: number
+	name: string
+	overview: string | null
+	poster_path: string | null
+	season_number: number
+	air_date: string | null
+	episode_count: number
+}
+
+export interface TMDbEpisode {
+	id: number
+	name: string
+	overview: string | null
+	vote_average: number
+	vote_count: number
+	still_path: string | null
+	season_number: number
+	episode_number: number
+	air_date: string | null
+	runtime: number | null
+	show_id: number
+}
+
+export interface TMDbSeasonDetails {
+	_id: string
+	id: number
+	episodes: TMDbEpisode[]
+	name: string
+	overview: string | null
+	poster_path: string | null
+	season_number: number
+	air_date: string | null
+}
+
+export interface TMDbTVAggregateCredits {
+	id: number
+	cast: TMDbTVCastMember[]
+	crew: TMDbTVCrewMember[]
+}
+
+export interface TMDbTVCastMember {
+	id: number
+	name: string
+	original_name: string
+	profile_path: string | null
+	character: string
+	roles: {
+		credit_id: string
+		character: string
+		episode_count: number
+	}[]
+	total_episode_count: number
+	order: number
+	adult: boolean
+	gender: number | null
+	known_for_department: string
+	popularity: number
+}
+
+export interface TMDbTVCrewMember {
+	id: number
+	name: string
+	original_name: string
+	profile_path: string | null
+	department: string
+	jobs: {
+		job: string
+		episode_count: number
+	}[]
+	total_episode_count: number
+	adult: boolean
+	gender: number | null
+	known_for_department: string
+	popularity: number
+}
+
+export interface TMDbTVImages {
+	backdrops: {
+		aspect_ratio: number
+		height: number
+		iso_639_1: string | null
+		file_path: string
+		vote_average: number
+		vote_count: number
+		width: number
+	}[]
+	posters: {
+		aspect_ratio: number
+		height: number
+		iso_639_1: string | null
+		file_path: string
+		vote_average: number
+		vote_count: number
+		width: number
+	}[]
+	logos: {
+		aspect_ratio: number
+		height: number
+		iso_639_1: string | null
+		file_path: string
+		vote_average: number
+		vote_count: number
+		width: number
+	}[]
+}
+
+export interface TMDbTVRecommendations {
+	page: number
+	results: TMDbTVResult[]
+	total_pages: number
+	total_results: number
+}
+
+export interface TMDbAccountState {
+	id: number
+	watchlist: boolean
+	rated: boolean | {
+		value: number
+	}
+	favorite: boolean
+}

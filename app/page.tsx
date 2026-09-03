@@ -24,7 +24,7 @@ const movieFetcher = async (key: MovieCategory): Promise<TMDbMovieListResponse> 
 }
 
 const tvFetcher = async (key: TVCategory): Promise<TMDbTVListResponse> => {
-	const res = await fetch(`/api/tv/${key}`)
+	const res = await fetch(`/api/tv/list/${key}`)
 	if (!res.ok) {
 		throw new Error(`Failed to fetch tv ${key}`)
 	}

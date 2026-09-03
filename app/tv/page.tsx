@@ -14,7 +14,7 @@ import {
 type TVCategory = "airing-today" | "top-rated" | "on-the-air" | "popular"
 
 const fetcher = async (key: TVCategory): Promise<TMDbTVListResponse> => {
-	const res = await fetch(`/api/tv/${key}`)
+	const res = await fetch(`/api/tv/list/${key}`)
 	if (!res.ok) {
 		throw new Error(`Failed to fetch ${key}`)
 	}
