@@ -2,6 +2,11 @@ import type {
 	TMDbMovieListResponse,
 	TMDbTVListResponse,
 	TMDBMediaItem,
+	TMDBMovieDetail,
+	TMDbMovieCredits,
+	TMDbMovieImages,
+	TMDbMovieRecommendations,
+	TMDbAccountState,
 } from "@/shared/interface/tmdb"
 
 const TMDB_API_BASE = process.env.TMDB_API_BASE_URL || "https://api.themoviedb.org/3"
@@ -105,4 +110,54 @@ export async function getAiringTodayTV(): Promise<TMDbTVListResponse> {
 
 export async function getOnTheAirTV(): Promise<TMDbTVListResponse> {
 	return getTVList("/tv/on_the_air")
+}
+
+export async function getMovieDetails(movieId: number): Promise<TMDBMovieDetail> {
+	return tmdbRequest<TMDBMovieDetail>(`/movie/${movieId}`)
+}
+
+export async function getMovieCredits(movieId: number): Promise<TMDbMovieCredits> {
+	return tmdbRequest<TMDbMovieCredits>(`/movie/${movieId}/credits`)
+}
+
+export async function getMovieImages(movieId: number): Promise<TMDbMovieImages> {
+	return tmdbRequest<TMDbMovieImages>(`/movie/${movieId}/images`)
+}
+
+export async function getMovieRecommendations(movieId: number): Promise<TMDbMovieRecommendations> {
+	return tmdbRequest<TMDbMovieRecommendations>(`/movie/${movieId}/recommendations`)
+}
+
+export async function getMovieAccountStates(
+	movieId: number,
+	sessionId: string
+): Promise<TMDbAccountState> {
+	return tmdbRequest<TMDbAccountState>(
+		`/movie/${movieId}/account_states?session_id=${sessionId}`
+	)
+}
+
+export async function addToWatchlist(
+	accountId: string,
+	sessionId: string,
+	mediaType: string,
+	mediaId: number,
+	watchlist: boolean
+): Promise<{ status_code: number; status_message: string }> {
+	return tmdbRequest<{ status_code: number; status_message: string }>(
+		`/account/${accountId}/watchlist`,
+		{
+			method: "POST",
+			body: JSON.stringify({
+				media_type: mediaType,
+				media_id: mediaId,
+				watchlist,
+			}),
+			headers: {
+				Authorization: `Bearer ${getAccessToken()}`,
+				"Content-Type": "application/json",
+				session_id: sessionId,
+			},
+		}
+	)
 }

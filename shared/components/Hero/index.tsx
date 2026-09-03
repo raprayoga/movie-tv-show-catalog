@@ -1,15 +1,17 @@
 "use client"
 
+import * as React from "react"
 import Image from "next/image"
 import { Swiper, SwiperSlide } from "swiper/react"
 import { Autoplay, Pagination } from "swiper/modules"
-import { Star } from "lucide-react"
+import { Star, Info } from "lucide-react"
 import "swiper/css"
 import "swiper/css/pagination"
 
 import { cn } from "@utils/cn"
 import { TMDBMediaItem, getImageUrl } from "@/shared/interface/tmdb"
 import Skeleton from "@/shared/components/Skeleton"
+import { Button } from "@/shared/components/Button"
 
 interface HeroProps {
 	items: TMDBMediaItem[]
@@ -64,10 +66,7 @@ export default function Hero({
 
 					return (
 						<SwiperSlide key={`${item.id}-${item.media_type || "item"}`}>
-							<div
-								className="relative w-full h-full cursor-pointer"
-								onClick={() => onItemClick?.(item)}
-							>
+							<div className="relative w-full h-full">
 								{imageUrl ? (
 									<Image
 										src={imageUrl}
@@ -106,9 +105,21 @@ export default function Hero({
 											)}
 										</div>
 
-										<p className="text-white/80 text-sm md:text-base line-clamp-2 md:line-clamp-3 max-w-2xl">
+										<p className="text-white/80 text-sm md:text-base line-clamp-2 md:line-clamp-3 max-w-2xl mb-6">
 											{item.overview}
 										</p>
+
+										<div className="flex items-center gap-3">
+											<Button
+												variant="solid"
+												btnType="primary"
+												size='xl'
+												leftIcon={<Info className="w-4 h-4" />}
+												onClick={() => onItemClick?.(item)}
+											>
+												More Info
+											</Button>
+										</div>
 									</div>
 								</div>
 							</div>

@@ -1,5 +1,7 @@
 "use client"
 
+import * as React from "react"
+import { useRouter } from "next/navigation"
 import useSWR from "swr"
 
 import Hero from "@/shared/components/Hero"
@@ -19,11 +21,13 @@ const fetcher = async (key: TVCategory): Promise<TMDbTVListResponse> => {
 	return res.json()
 }
 
-interface TVShowPageProps {
-	onItemClick?: (item: TMDBMediaItem) => void
-}
+export default function TVPage() {
+	const router = useRouter()
 
-export default function TVShowPage({ onItemClick }: TVShowPageProps) {
+	const handleItemClick = (item: TMDBMediaItem) => {
+		router.push(`/tv/${item.id}`)
+	}
+
 	const { data: airingToday, isLoading: isLoadingAiringToday } = useSWR<TMDbTVListResponse>(
 		"airing-today",
 		() => fetcher("airing-today")
@@ -70,35 +74,35 @@ export default function TVShowPage({ onItemClick }: TVShowPageProps) {
 
 	return (
 		<div className="min-h-screen bg-bg-primary">
-			<Hero items={airingTodayItems} isLoading={isLoadingAiringToday} onItemClick={onItemClick} />
+			<Hero items={airingTodayItems} isLoading={isLoadingAiringToday} onItemClick={handleItemClick} />
 
 			<div className="mt-6">
 				<ContentSection
 					title="Top Rated"
 					items={topRatedItems}
 					isLoading={isLoadingTopRated}
-					onItemClick={onItemClick}
+					onItemClick={handleItemClick}
 				/>
 
 				<ContentSection
 					title="Airing Today"
 					items={airingTodayItems}
 					isLoading={isLoadingAiringToday}
-					onItemClick={onItemClick}
+					onItemClick={handleItemClick}
 				/>
 
 				<ContentSection
 					title="On The Air"
 					items={onTheAirItems}
 					isLoading={isLoadingOnTheAir}
-					onItemClick={onItemClick}
+					onItemClick={handleItemClick}
 				/>
 
 				<ContentSection
 					title="Popular"
 					items={popularItems}
 					isLoading={isLoadingPopular}
-					onItemClick={onItemClick}
+					onItemClick={handleItemClick}
 				/>
 			</div>
 		</div>

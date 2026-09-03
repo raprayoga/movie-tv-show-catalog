@@ -1,0 +1,5 @@
+export { default as MovieHero } from "./MovieHero"
+export { default as CastSection } from "./CastSection"
+export { default as PhotosSection } from "./PhotosSection"
+export { default as DetailsSection } from "./DetailsSection"
+export { default as MovieDetailSkeleton } from "./MovieDetailSkeleton"
