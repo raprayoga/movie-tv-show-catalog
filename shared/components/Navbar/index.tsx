@@ -1,6 +1,8 @@
 "use client"
 
 import * as React from "react"
+import Link from "next/link"
+import { usePathname } from "next/navigation"
 import {
 	Heart,
 	Search,
@@ -31,7 +33,7 @@ interface NavLinkProps {
 
 const NavLink = ({ href, children, isActive = false }: NavLinkProps) => {
 	return (
-		<a
+		<Link
 			href={href}
 			className={`relative px-3 py-2 text-sm font-medium transition-colors hover:text-primary-base ${isActive ? "text-primary-base" : "text-text-secondary"}`}
 		>
@@ -39,7 +41,7 @@ const NavLink = ({ href, children, isActive = false }: NavLinkProps) => {
 			{isActive && (
 				<span className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary-base" />
 			)}
-		</a>
+		</Link>
 	)
 }
 
@@ -50,6 +52,7 @@ const NAV_LINKS = [
 ]
 
 export function Navbar() {
+	const pathname = usePathname()
 	const { user, isAuthenticated, isLoading, login, logout } = useCurrentUser()
 	const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false)
 	const mobileMenuRef = React.useRef<HTMLDivElement>(null)
@@ -118,14 +121,18 @@ export function Navbar() {
 			<div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 				<div className="flex h-16 items-center justify-between">
 					<div className="flex items-center gap-8">
-						<a href="#" className="flex items-center gap-2">
+						<Link href="/" className="flex items-center gap-2">
 							<Film className="h-7 w-7 text-primary-base" />
 							<span className="text-lg font-bold text-text-primary">MovieDB</span>
-						</a>
+						</Link>
 
 						<div className="hidden md:flex md:items-center md:gap-1">
 							{NAV_LINKS.map((link) => (
-								<NavLink key={link.label} href={link.href}>
+								<NavLink
+									key={link.label}
+									href={link.href}
+									isActive={pathname === link.href}
+								>
 									{link.label}
 								</NavLink>
 							))}
@@ -183,15 +190,19 @@ export function Navbar() {
 						</a>
 
 						{NAV_LINKS.map((link) => (
-							<a
+							<Link
 								key={link.label}
 								href={link.href}
 								onClick={handleMobileMenuClose}
-								className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-text-secondary transition-colors hover:bg-primary-lightest hover:text-primary-base"
+								className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${
+									pathname === link.href
+										? "bg-primary-lightest text-primary-base"
+										: "text-text-secondary hover:bg-primary-lightest hover:text-primary-base"
+								}`}
 							>
 								{link.icon}
 								{link.label}
-							</a>
+							</Link>
 						))}
 
 						{isAuthenticated && user ? (

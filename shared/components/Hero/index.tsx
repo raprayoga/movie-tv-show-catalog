@@ -11,13 +11,21 @@ import { cn } from "@utils/cn"
 import { TMDBMediaItem, getImageUrl } from "@/shared/interface/tmdb"
 import Skeleton from "@/shared/components/Skeleton"
 
-interface HomeHeroProps {
+interface HeroProps {
 	items: TMDBMediaItem[]
 	isLoading?: boolean
+	maxItems?: number
+	showMediaType?: boolean
 	onItemClick?: (item: TMDBMediaItem) => void
 }
 
-export default function HomeHero({ items, isLoading, onItemClick }: HomeHeroProps) {
+export default function Hero({
+	items,
+	isLoading,
+	maxItems = 5,
+	showMediaType = false,
+	onItemClick,
+}: HeroProps) {
 	if (isLoading) {
 		return (
 			<div className="relative w-full h-[40vh] min-h-[350px] sm:h-[50vh] lg:h-[60vh] xl:h-[65vh] 2xl:h-[75vh]">
@@ -29,6 +37,8 @@ export default function HomeHero({ items, isLoading, onItemClick }: HomeHeroProp
 	if (items.length === 0) {
 		return null
 	}
+
+	const displayItems = items.slice(0, maxItems)
 
 	return (
 		<div className="relative w-full h-[40vh] min-h-[350px] sm:h-[50vh] lg:h-[60vh] xl:h-[65vh] 2xl:h-[75vh]">
@@ -49,11 +59,11 @@ export default function HomeHero({ items, isLoading, onItemClick }: HomeHeroProp
 				loop
 				className="h-full"
 			>
-				{items.slice(0, 5).map((item) => {
+				{displayItems.map((item) => {
 					const imageUrl = getImageUrl(item.backdrop_path, "backdrop")
 
 					return (
-						<SwiperSlide key={item.id}>
+						<SwiperSlide key={`${item.id}-${item.media_type || "item"}`}>
 							<div
 								className="relative w-full h-full cursor-pointer"
 								onClick={() => onItemClick?.(item)}
@@ -89,6 +99,11 @@ export default function HomeHero({ items, isLoading, onItemClick }: HomeHeroProp
 											<span className="text-white/70">
 												{(item.release_date || item.first_air_date || "").split("-")[0]}
 											</span>
+											{showMediaType && item.media_type && (
+												<span className="text-white/50 text-sm capitalize">
+													{item.media_type}
+												</span>
+											)}
 										</div>
 
 										<p className="text-white/80 text-sm md:text-base line-clamp-2 md:line-clamp-3 max-w-2xl">
@@ -103,7 +118,7 @@ export default function HomeHero({ items, isLoading, onItemClick }: HomeHeroProp
 			</Swiper>
 
 			<div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex gap-2">
-				{items.slice(0, 5).map((_, index) => (
+				{displayItems.map((_, index) => (
 					<div
 						key={index}
 						className={cn(
