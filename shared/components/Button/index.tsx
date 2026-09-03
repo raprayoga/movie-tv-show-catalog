@@ -8,7 +8,7 @@ import * as React from "react"
 import { cn } from "@utils/cn"
 
 const buttonVariants = cva(
-	"inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium px-3 focus:outline-none leading-4",
+	"inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium px-3 focus:outline-none leading-4 cursor-pointer",
 	{
 		variants: {
 			size: {
