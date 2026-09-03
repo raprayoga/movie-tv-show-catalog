@@ -1,9 +1,17 @@
 import * as React from "react"
 import Image from "next/image"
-import { X } from "lucide-react"
+import { Swiper, SwiperSlide } from "swiper/react"
+import { Navigation } from "swiper/modules"
+import "swiper/css"
+import "swiper/css/navigation"
 
 import { getImageUrl, type TMDbTVImages } from "@/shared/interface/tmdb"
 import { Skeleton } from "@/shared/components/Skeleton"
+import {
+	Dialog,
+	DialogContent,
+	DialogClose,
+} from "@/shared/components/Dialog"
 
 interface PhotosSectionProps {
 	images: TMDbTVImages["backdrops"]
@@ -59,63 +67,44 @@ export default function PhotosSection({ images, isLoading }: PhotosSectionProps)
 				})}
 			</div>
 
-			{isDialogOpen && (
-				<div
-					className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4"
-					onClick={() => setIsDialogOpen(false)}
+			<Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+				<DialogContent
+					className="p-0 bg-transparent border-none w-[90vw] h-[90vh] max-w-none max-h-none flex items-center justify-center"
 				>
-					<div
-						className="relative max-w-5xl w-full"
-						onClick={(e) => e.stopPropagation()}
+					<button
+						className="absolute top-4 right-4 z-10 w-10 h-10 flex items-center justify-center bg-black/50 hover:bg-black/70 text-white rounded-full transition-colors"
+						onClick={() => setIsDialogOpen(false)}
 					>
-						<button
-							className="absolute -top-12 right-0 text-white/70 hover:text-white flex items-center gap-2"
-							onClick={() => setIsDialogOpen(false)}
-						>
-							<X className="w-5 h-5" />
-							Close
-						</button>
+						X
+					</button>
+					<Swiper
+						modules={[Navigation]}
+						initialSlide={selectedIndex}
+						navigation
+						className="w-full h-full"
+						onSlideChange={(swiper) => setSelectedIndex(swiper.activeIndex)}
+					>
+						{displayImages.map((img, idx) => {
+							const imgUrl = getImageUrl(img.file_path, "original")
+							if (!imgUrl) return null
 
-						<div className="flex gap-2 overflow-x-auto pb-4">
-							{displayImages.map((image, index) => {
-								const imageUrl = getImageUrl(image.file_path, "original")
-								if (!imageUrl) return null
-
-								return (
-									<button
-										key={index}
-										className={`flex-shrink-0 rounded-lg overflow-hidden border-2 transition-colors ${
-											index === selectedIndex
-												? "border-white"
-												: "border-transparent hover:border-white/50"
-										}`}
-										onClick={() => setSelectedIndex(index)}
-									>
+							return (
+								<SwiperSlide key={idx} className="flex items-center justify-center">
+									<div className="relative w-full h-full">
 										<Image
-											src={imageUrl}
-											alt={`Backdrop ${index + 1}`}
-											width={240}
-											height={135}
-											className="object-cover"
+											src={imgUrl}
+											alt={`Backdrop ${idx + 1}`}
+											fill
+											className="object-contain"
+											sizes="90vw"
 										/>
-									</button>
-								)
-							})}
-						</div>
-
-						<div className="relative aspect-video bg-black rounded-lg overflow-hidden mt-4">
-							{displayImages[selectedIndex] && (
-								<Image
-									src={getImageUrl(displayImages[selectedIndex].file_path, "original") || ""}
-									alt={`Backdrop ${selectedIndex + 1}`}
-									fill
-									className="object-contain"
-								/>
-							)}
-						</div>
-					</div>
-				</div>
-			)}
+									</div>
+								</SwiperSlide>
+							)
+						})}
+					</Swiper>
+				</DialogContent>
+			</Dialog>
 		</section>
 	)
 }
