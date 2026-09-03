@@ -1,36 +1,119 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Movie & TV Show Catalog
 
-## Getting Started
+A web application for browsing movies and TV shows using The Movie Database (TMDB) API.
 
-First, run the development server:
+## Requirements
+
+- Node.js LTS
+- npm
+- A TMDB API Read Access Token
+
+## Install and Run
+
+1. Install the dependencies:
+
+	```bash
+	npm install
+	```
+
+2. Create a local environment file:
+
+	```bash
+	# macOS/Linux
+	cp .env.example .env
+
+	# Windows PowerShell
+	Copy-Item .env.example .env
+	```
+
+3. Fill in the variables in `.env`:
+
+	```env
+	TMDB_API_READ_ACCESS_TOKEN=your_tmdb_read_access_token
+	TMDB_API_BASE_URL=https://api.themoviedb.org/3
+	TMDB_AUTH_BASE_URL=https://www.themoviedb.org/authenticate
+	NEXT_PUBLIC_APP_URL=http://localhost:3000
+	```
+
+4. Start the development server:
+
+	```bash
+	npm run dev
+	```
+
+5. Open [http://localhost:3000](http://localhost:3000).
+
+### Other Commands
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm run lint    # Run ESLint
+npm run build   # Create a production build
+npm run start   # Start the production build
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Storybook
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Storybook is used to develop and review UI components independently.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. Install dependencies using `npm install`.
+2. Start Storybook:
 
-## Learn More
+	```bash
+	npm run storybook
+	```
 
-To learn more about Next.js, take a look at the following resources:
+3. Open [http://localhost:6006](http://localhost:6006).
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+To build a static Storybook site:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+npm run build-storybook
+```
 
-## Deploy on Vercel
+## Project Structure
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```text
+.
+|-- app/                    Next.js routes, pages, layouts, and API handlers
+|   |-- api/                Server-side API routes, including authentication
+|   |-- movies/             Movie pages and detail routes
+|   |-- search/             Search page and route-specific components
+|   |-- tv/                 TV show pages and detail routes
+|   `-- watchlist/          Watchlist page
+|-- shared/                 Reusable application code
+|   |-- components/         Shared UI components
+|   |-- hooks/              Shared React hooks
+|   |-- interface/          Shared TypeScript types and interfaces
+|   |-- service/            External-service logic, including TMDB
+|   `-- utils/              Reusable utility functions
+|-- .storybook/             Storybook configuration
+|-- public/                 Static assets served by the application
+|-- .README/                Additional project documentation
+`-- package.json            Scripts and dependencies
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Folder Rules
+
+- Keep route-specific code inside its route folder in `app/`.
+- Put API route handlers in `app/api/` and reusable TMDB logic in `shared/service/`.
+- Put reusable UI, hooks, types, and utilities in the matching folder under `shared/`.
+- Keep static files in `public/`.
+- Add Storybook files as `*.stories.*` files near a component or in `stories/`.
+- Keep Storybook configuration in `.storybook/`.
+
+## Tech Stack
+
+- Next.js 16 and React 19
+- TypeScript
+- Tailwind CSS 4
+- Radix UI, class-variance-authority, and Lucide React
+- SWR for client-side data fetching
+- TMDB API v3
+- Storybook 10 with Vite
+- ESLint, Vitest, and Playwright
+
+## Authentication
+
+Login uses TMDB v3 Session Authentication: the user approves access on TMDB, then the application creates a TMDB session and stores it in a secure HTTP-only cookie.
+
+See [TMDB Authentication Flow](.README/README-TMDB-AUTHENTICATION.md) for the complete login flow, environment-variable rules, and session security details.
