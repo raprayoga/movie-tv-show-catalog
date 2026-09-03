@@ -44,9 +44,9 @@ const NavLink = ({ href, children, isActive = false }: NavLinkProps) => {
 }
 
 const NAV_LINKS = [
-	{ href: "#", label: "Home", icon: <Home className="h-5 w-5" /> },
-	{ href: "#", label: "Movies", icon: <Film className="h-5 w-5" /> },
-	{ href: "#", label: "TV", icon: <TvIcon className="h-5 w-5" /> },
+	{ href: "/", label: "Home", icon: <Home className="h-5 w-5" /> },
+	{ href: "/movies", label: "Movies", icon: <Film className="h-5 w-5" /> },
+	{ href: "/tv-shows", label: "TV", icon: <TvIcon className="h-5 w-5" /> },
 ]
 
 export function Navbar() {
