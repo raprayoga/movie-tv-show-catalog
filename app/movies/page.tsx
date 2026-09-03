@@ -10,6 +10,8 @@ import {
 	TMDBMediaItem,
 	TMDbMovieListResponse,
 } from "@/shared/interface/tmdb"
+import { useWatchlist, toggleWatchlist } from "@/shared/hooks/use-watchlist"
+import { useCurrentUser } from "@/shared/hooks/use-current-user"
 
 type MovieCategory = "now-playing" | "top-rated" | "upcoming" | "popular"
 
@@ -23,9 +25,29 @@ const fetcher = async (key: MovieCategory): Promise<TMDbMovieListResponse> => {
 
 export default function MoviesPage() {
 	const router = useRouter()
+	const { isAuthenticated } = useCurrentUser()
+	const { allItems: watchlistItems, isLoading: isLoadingWatchlist } = useWatchlist()
+
+	const [isWatchlistMutating, setIsWatchlistMutating] = React.useState(false)
+
+	const watchlistIds = React.useMemo(() => {
+		return new Set(watchlistItems.map((item) => item.id))
+	}, [watchlistItems])
 
 	const handleItemClick = (item: TMDBMediaItem) => {
 		router.push(`/movies/${item.id}`)
+	}
+
+	const handleWatchlistToggle = async (item: TMDBMediaItem, newState: boolean) => {
+		if (!isAuthenticated) return
+		setIsWatchlistMutating(true)
+		await toggleWatchlist(item.media_type || "movie", item.id, newState)
+		setIsWatchlistMutating(false)
+	}
+
+	const handleContentWatchlistToggle = async (mediaType: "movie" | "tv", mediaId: number, newState: boolean) => {
+		if (!isAuthenticated) return
+		await toggleWatchlist(mediaType, mediaId, newState)
 	}
 
 	const { data: nowPlaying, isLoading: isLoadingNowPlaying } = useSWR<TMDbMovieListResponse>(
@@ -68,9 +90,22 @@ export default function MoviesPage() {
 		media_type: "movie" as const,
 	}))
 
+	const heroItems = nowPlayingItems.slice(0, 3)
+	const heroWatchlistId = heroItems[0]?.id
+	const heroIsInWatchlist = heroItems[0] ? watchlistIds.has(heroItems[0].id) : false
+
 	return (
 		<div className="min-h-screen bg-bg-primary">
-			<Hero items={nowPlayingItems} isLoading={isLoadingNowPlaying} onItemClick={handleItemClick} />
+			<Hero
+				items={heroItems}
+				isLoading={isLoadingNowPlaying}
+				onItemClick={handleItemClick}
+				onWatchlistToggle={isAuthenticated ? handleWatchlistToggle : undefined}
+				watchlistItemId={heroWatchlistId}
+				watchlistItemType="movie"
+				isInWatchlist={heroIsInWatchlist}
+				isWatchlistLoading={isWatchlistMutating}
+			/>
 
 			<div className="mt-6">
 				<ContentSection
@@ -78,6 +113,10 @@ export default function MoviesPage() {
 					items={topRatedItems}
 					isLoading={isLoadingTopRated}
 					onItemClick={handleItemClick}
+					showWatchlistButton={isAuthenticated && !isLoadingWatchlist}
+					watchlistIds={watchlistIds}
+					onWatchlistToggle={handleContentWatchlistToggle}
+					isWatchlistLoading={isWatchlistMutating}
 				/>
 
 				<ContentSection
@@ -85,6 +124,10 @@ export default function MoviesPage() {
 					items={upcomingItems}
 					isLoading={isLoadingUpcoming}
 					onItemClick={handleItemClick}
+					showWatchlistButton={isAuthenticated && !isLoadingWatchlist}
+					watchlistIds={watchlistIds}
+					onWatchlistToggle={handleContentWatchlistToggle}
+					isWatchlistLoading={isWatchlistMutating}
 				/>
 
 				<ContentSection
@@ -92,6 +135,10 @@ export default function MoviesPage() {
 					items={popularItems}
 					isLoading={isLoadingPopular}
 					onItemClick={handleItemClick}
+					showWatchlistButton={isAuthenticated && !isLoadingWatchlist}
+					watchlistIds={watchlistIds}
+					onWatchlistToggle={handleContentWatchlistToggle}
+					isWatchlistLoading={isWatchlistMutating}
 				/>
 
 				<ContentSection
@@ -99,6 +146,10 @@ export default function MoviesPage() {
 					items={nowPlayingItems}
 					isLoading={isLoadingNowPlaying}
 					onItemClick={handleItemClick}
+					showWatchlistButton={isAuthenticated && !isLoadingWatchlist}
+					watchlistIds={watchlistIds}
+					onWatchlistToggle={handleContentWatchlistToggle}
+					isWatchlistLoading={isWatchlistMutating}
 				/>
 			</div>
 		</div>

@@ -14,11 +14,18 @@ export async function POST(
 	}
 
 	const cookieStore = await cookies()
-	const sessionId = cookieStore.get("session_id")?.value
-	const accountId = cookieStore.get("account_id")?.value
+	const sessionId = cookieStore.get("tmdb_session_id")?.value
+	const accountCookie = cookieStore.get("tmdb_account")?.value
 
-	if (!sessionId || !accountId) {
+	if (!sessionId || !accountCookie) {
 		return NextResponse.json({ error: "Not authenticated" }, { status: 401 })
+	}
+
+	let accountObj: { id: number }
+	try {
+		accountObj = JSON.parse(accountCookie)
+	} catch {
+		return NextResponse.json({ error: "Invalid account data" }, { status: 400 })
 	}
 
 	let body: { watchlist?: boolean }
@@ -33,7 +40,7 @@ export async function POST(
 	}
 
 	try {
-		const data = await addToWatchlist(accountId, sessionId, "tv", seriesId, body.watchlist)
+		const data = await addToWatchlist(String(accountObj.id), sessionId, "tv", seriesId, body.watchlist)
 		return NextResponse.json(data)
 	} catch (error) {
 		const message = error instanceof Error ? error.message : "Unknown error"

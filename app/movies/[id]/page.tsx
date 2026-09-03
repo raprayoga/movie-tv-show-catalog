@@ -3,10 +3,9 @@
 import * as React from "react"
 import { useRouter } from "next/navigation"
 import useSWR from "swr"
-import { Plus, Check } from "lucide-react"
 
-import { Button } from "@/shared/components/Button"
 import ContentSection from "@/shared/components/ContentSection"
+import WatchlistButton from "@/shared/components/WatchlistButton"
 import { useCurrentUser } from "@/shared/hooks/use-current-user"
 import {
 	type TMDBMovieDetail,
@@ -39,7 +38,7 @@ export default function MovieDetailPage({ params }: MovieDetailPageProps) {
 	const resolvedParams = React.use(params)
 	const movieId = resolvedParams.id
 
-	const { isAuthenticated, login } = useCurrentUser()
+	const { isAuthenticated } = useCurrentUser()
 
 	const handleItemClick = (item: TMDBMediaItem) => {
 		const route = item.media_type === "tv" ? "/tv" : "/movies"
@@ -66,35 +65,12 @@ export default function MovieDetailPage({ params }: MovieDetailPageProps) {
 		fetcher
 	)
 
-	const { data: accountState, isLoading: isLoadingAccountState } = useSWR<TMDbAccountState>(
+	const { data: accountState, isLoading: isLoadingAccountState, mutate: mutateAccountState } = useSWR<TMDbAccountState>(
 		isAuthenticated ? `/api/movies/${movieId}/account-state` : null,
 		fetcher
 	)
 
-	const [watchlistLoading, setWatchlistLoading] = React.useState(false)
-
 	const isInWatchlist = accountState?.watchlist ?? false
-
-	const handleWatchlistToggle = async () => {
-		if (!isAuthenticated) {
-			login()
-			return
-		}
-
-		setWatchlistLoading(true)
-		try {
-			const res = await fetch(`/api/movies/${movieId}/watchlist`, {
-				method: "POST",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify({ watchlist: !isInWatchlist }),
-			})
-			if (res.ok) {
-				// Revalidate account state
-			}
-		} finally {
-			setWatchlistLoading(false)
-		}
-	}
 
 	if (isLoadingMovie) {
 		return <MovieDetailSkeleton />
@@ -117,29 +93,16 @@ export default function MovieDetailPage({ params }: MovieDetailPageProps) {
 
 	return (
 		<article className="min-h-screen bg-bg-primary">
-			{isAuthenticated ? (
-				<MovieHero movie={movie}>
-					<div className="flex items-center gap-3">
-						<Button
-							variant="solid"
-							btnType="primary"
-							onClick={handleWatchlistToggle}
-							loading={watchlistLoading || isLoadingAccountState}
-							leftIcon={
-								isInWatchlist ? (
-									<Check className="w-4 h-4" />
-								) : (
-									<Plus className="w-4 h-4" />
-								)
-							}
-						>
-							{isInWatchlist ? "In Watchlist" : "Add to Watchlist"}
-						</Button>
-					</div>
-				</MovieHero>
-			) : (
-				<MovieHero movie={movie} />
-			)}
+			<MovieHero movie={movie}>
+				<WatchlistButton
+					mediaType="movie"
+					mediaId={movie.id}
+					isInWatchlist={isInWatchlist}
+					isLoading={isLoadingAccountState}
+					size="lg"
+					onSuccess={() => mutateAccountState()}
+				/>
+			</MovieHero>
 
 			<div className="max-w-7xl mx-auto px-4">
 				{credits?.cast && credits.cast.length > 0 && (

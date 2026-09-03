@@ -95,7 +95,7 @@ const meta: Meta<typeof Button> = {
 		loading: {
 			control: "boolean",
 			description:
-				"If set to true, shows a loading spinner and changes the button text to 'Memproses...'",
+				"If set to true, shows a loading spinner and changes the button text to 'Processing...'",
 			table: {
 				defaultValue: {
 					summary: "false",

@@ -4,7 +4,7 @@ import * as React from "react"
 import Image from "next/image"
 import { Swiper, SwiperSlide } from "swiper/react"
 import { Autoplay, Pagination } from "swiper/modules"
-import { Star, Info } from "lucide-react"
+import { Star, Info, Bookmark } from "lucide-react"
 import "swiper/css"
 import "swiper/css/pagination"
 
@@ -19,6 +19,11 @@ interface HeroProps {
 	maxItems?: number
 	showMediaType?: boolean
 	onItemClick?: (item: TMDBMediaItem) => void
+	onWatchlistToggle?: (item: TMDBMediaItem, newState: boolean) => void
+	watchlistItemId?: number
+	watchlistItemType?: "movie" | "tv"
+	isInWatchlist?: boolean
+	isWatchlistLoading?: boolean
 }
 
 export default function Hero({
@@ -27,6 +32,11 @@ export default function Hero({
 	maxItems = 5,
 	showMediaType = false,
 	onItemClick,
+	onWatchlistToggle,
+	watchlistItemId,
+	watchlistItemType,
+	isInWatchlist = false,
+	isWatchlistLoading = false,
 }: HeroProps) {
 	if (isLoading) {
 		return (
@@ -63,6 +73,9 @@ export default function Hero({
 			>
 				{displayItems.map((item) => {
 					const imageUrl = getImageUrl(item.backdrop_path, "backdrop")
+					const itemId = item.id
+					const itemType = (item.media_type || "movie") as "movie" | "tv"
+					const isCurrentItemInWatchlist = itemId === watchlistItemId && itemType === watchlistItemType ? isInWatchlist : false
 
 					return (
 						<SwiperSlide key={`${item.id}-${item.media_type || "item"}`}>
@@ -119,6 +132,21 @@ export default function Hero({
 											>
 												More Info
 											</Button>
+
+											{onWatchlistToggle && (
+												<Button
+													variant="outline"
+													btnType="neutral"
+													size='xl'
+													onClick={() => onWatchlistToggle(item, !isCurrentItemInWatchlist)}
+													loading={isWatchlistLoading && itemId === watchlistItemId}
+													leftIcon={
+														<Bookmark className={`w-4 h-4 ${isCurrentItemInWatchlist ? "fill-current" : ""}`} />
+													}
+												>
+													{isCurrentItemInWatchlist ? "In Watchlist" : "Watchlist"}
+												</Button>
+											)}
 										</div>
 									</div>
 								</div>

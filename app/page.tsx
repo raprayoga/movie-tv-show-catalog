@@ -11,6 +11,8 @@ import {
 	TMDbMovieListResponse,
 	TMDbTVListResponse,
 } from "@/shared/interface/tmdb"
+import { useWatchlist, toggleWatchlist } from "@/shared/hooks/use-watchlist"
+import { useCurrentUser } from "@/shared/hooks/use-current-user"
 
 type MovieCategory = "now-playing" | "top-rated" | "upcoming" | "popular"
 type TVCategory = "airing-today" | "top-rated" | "on-the-air" | "popular"
@@ -33,10 +35,30 @@ const tvFetcher = async (key: TVCategory): Promise<TMDbTVListResponse> => {
 
 export default function HomePage() {
 	const router = useRouter()
+	const { isAuthenticated } = useCurrentUser()
+	const { allItems: watchlistItems, isLoading: isLoadingWatchlist } = useWatchlist()
+
+	const [isWatchlistMutating, setIsWatchlistMutating] = React.useState(false)
+
+	const watchlistIds = React.useMemo(() => {
+		return new Set(watchlistItems.map((item) => item.id))
+	}, [watchlistItems])
 
 	const handleItemClick = (item: TMDBMediaItem) => {
 		const route = item.media_type === "tv" ? "/tv" : "/movies"
 		router.push(`${route}/${item.id}`)
+	}
+
+	const handleWatchlistToggle = async (item: TMDBMediaItem, newState: boolean) => {
+		if (!isAuthenticated) return
+		setIsWatchlistMutating(true)
+		await toggleWatchlist(item.media_type || "movie", item.id, newState)
+		setIsWatchlistMutating(false)
+	}
+
+	const handleContentWatchlistToggle = async (mediaType: "movie" | "tv", mediaId: number, newState: boolean) => {
+		if (!isAuthenticated) return
+		await toggleWatchlist(mediaType, mediaId, newState)
 	}
 
 	const { data: nowPlayingMovies, isLoading: isLoadingNowPlaying } = useSWR<TMDbMovieListResponse>(
@@ -129,9 +151,25 @@ export default function HomePage() {
 
 	const isHeroLoading = isLoadingNowPlaying || isLoadingAiringToday
 
+	const currentHeroItem = heroItems[0]
+	const heroWatchlistId = currentHeroItem?.id
+	const heroWatchlistType = (currentHeroItem?.media_type || "movie") as "movie" | "tv"
+	const heroIsInWatchlist = currentHeroItem ? watchlistIds.has(currentHeroItem.id) : false
+
 	return (
 		<div className="min-h-screen bg-bg-primary">
-			<Hero items={heroItems} isLoading={isHeroLoading} maxItems={6} showMediaType onItemClick={handleItemClick} />
+			<Hero
+				items={heroItems}
+				isLoading={isHeroLoading}
+				maxItems={6}
+				showMediaType
+				onItemClick={handleItemClick}
+				onWatchlistToggle={handleWatchlistToggle}
+				watchlistItemId={heroWatchlistId}
+				watchlistItemType={heroWatchlistType}
+				isInWatchlist={heroIsInWatchlist}
+				isWatchlistLoading={isWatchlistMutating}
+			/>
 
 			<div className="mt-6">
 				<ContentSection
@@ -139,6 +177,10 @@ export default function HomePage() {
 					items={popularMovieItems}
 					isLoading={isLoadingPopularMovies}
 					onItemClick={handleItemClick}
+					showWatchlistButton={isAuthenticated && !isLoadingWatchlist}
+					watchlistIds={watchlistIds}
+					onWatchlistToggle={handleContentWatchlistToggle}
+					isWatchlistLoading={isWatchlistMutating}
 				/>
 
 				<ContentSection
@@ -146,6 +188,10 @@ export default function HomePage() {
 					items={topRatedTVItems}
 					isLoading={isLoadingTopRatedTV}
 					onItemClick={handleItemClick}
+					showWatchlistButton={isAuthenticated && !isLoadingWatchlist}
+					watchlistIds={watchlistIds}
+					onWatchlistToggle={handleContentWatchlistToggle}
+					isWatchlistLoading={isWatchlistMutating}
 				/>
 
 				<ContentSection
@@ -153,6 +199,10 @@ export default function HomePage() {
 					items={upcomingMovieItems}
 					isLoading={isLoadingUpcomingMovies}
 					onItemClick={handleItemClick}
+					showWatchlistButton={isAuthenticated && !isLoadingWatchlist}
+					watchlistIds={watchlistIds}
+					onWatchlistToggle={handleContentWatchlistToggle}
+					isWatchlistLoading={isWatchlistMutating}
 				/>
 
 				<ContentSection
@@ -160,6 +210,10 @@ export default function HomePage() {
 					items={popularTVItems}
 					isLoading={isLoadingPopularTV}
 					onItemClick={handleItemClick}
+					showWatchlistButton={isAuthenticated && !isLoadingWatchlist}
+					watchlistIds={watchlistIds}
+					onWatchlistToggle={handleContentWatchlistToggle}
+					isWatchlistLoading={isWatchlistMutating}
 				/>
 
 				<ContentSection
@@ -167,6 +221,10 @@ export default function HomePage() {
 					items={topRatedMovieItems}
 					isLoading={isLoadingTopRatedMovies}
 					onItemClick={handleItemClick}
+					showWatchlistButton={isAuthenticated && !isLoadingWatchlist}
+					watchlistIds={watchlistIds}
+					onWatchlistToggle={handleContentWatchlistToggle}
+					isWatchlistLoading={isWatchlistMutating}
 				/>
 
 				<ContentSection
@@ -174,6 +232,10 @@ export default function HomePage() {
 					items={airingTodayItems}
 					isLoading={isLoadingAiringToday}
 					onItemClick={handleItemClick}
+					showWatchlistButton={isAuthenticated && !isLoadingWatchlist}
+					watchlistIds={watchlistIds}
+					onWatchlistToggle={handleContentWatchlistToggle}
+					isWatchlistLoading={isWatchlistMutating}
 				/>
 
 				<ContentSection
@@ -181,12 +243,21 @@ export default function HomePage() {
 					items={nowPlayingItems}
 					isLoading={isLoadingNowPlaying}
 					onItemClick={handleItemClick}
+					showWatchlistButton={isAuthenticated && !isLoadingWatchlist}
+					watchlistIds={watchlistIds}
+					onWatchlistToggle={handleContentWatchlistToggle}
+					isWatchlistLoading={isWatchlistMutating}
 				/>
 
 				<ContentSection
 					title="On The Air"
 					items={onTheAirItems}
 					isLoading={isLoadingOnTheAir}
+					onItemClick={handleItemClick}
+					showWatchlistButton={isAuthenticated && !isLoadingWatchlist}
+					watchlistIds={watchlistIds}
+					onWatchlistToggle={handleContentWatchlistToggle}
+					isWatchlistLoading={isWatchlistMutating}
 				/>
 			</div>
 		</div>

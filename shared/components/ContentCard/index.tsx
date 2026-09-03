@@ -5,7 +5,8 @@ import Image from "next/image"
 import { Star } from "lucide-react"
 
 import { cn } from "@utils/cn"
-import { getImageUrl, formatYear } from "@/shared/interface/tmdb"
+import { getImageUrl, formatYear, type TMDBMediaType } from "@/shared/interface/tmdb"
+import WatchlistButton from "@/shared/components/WatchlistButton"
 
 interface ContentCardProps {
 	id: number
@@ -17,6 +18,11 @@ interface ContentCardProps {
 	vote_average: number
 	className?: string
 	onClick?: () => void
+	mediaType?: TMDBMediaType
+	showWatchlistButton?: boolean
+	isInWatchlist?: boolean
+	onWatchlistToggle?: (newState: boolean) => void
+	isWatchlistLoading?: boolean
 }
 
 export default function ContentCard({
@@ -29,10 +35,20 @@ export default function ContentCard({
 	vote_average,
 	className,
 	onClick,
+	mediaType,
+	showWatchlistButton = false,
+	isInWatchlist = false,
+	onWatchlistToggle,
+	isWatchlistLoading = false,
 }: ContentCardProps) {
 	const displayTitle = title || name || ""
 	const year = formatYear(release_date || first_air_date)
 	const imageUrl = getImageUrl(poster_path, "poster")
+
+	const handleWatchlistClick = (e: React.MouseEvent) => {
+		e.stopPropagation()
+		onWatchlistToggle?.(!isInWatchlist)
+	}
 
 	return (
 		<div
@@ -63,6 +79,23 @@ export default function ContentCard({
 						{vote_average.toFixed(1)}
 					</span>
 				</div>
+
+				{showWatchlistButton && mediaType && (
+					<div
+						className="absolute top-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity"
+						onClick={handleWatchlistClick}
+					>
+						<WatchlistButton
+							mediaType={mediaType}
+							mediaId={id}
+							isInWatchlist={isInWatchlist}
+							isLoading={isWatchlistLoading}
+							onToggle={onWatchlistToggle}
+							iconOnly
+							className="w-8 h-8 flex items-center justify-center bg-black/50 hover:bg-black/70 text-white rounded-full transition-colors"
+						/>
+					</div>
+				)}
 			</div>
 
 			<div className="p-2 bg-white">

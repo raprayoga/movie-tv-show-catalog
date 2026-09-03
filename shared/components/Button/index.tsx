@@ -140,7 +140,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 				{!loading && leftIcon && (
 					<Slot.Root className={cn(iconVariant({ size }))}>{leftIcon}</Slot.Root>
 				)}
-				<Slot.Slottable>{loading ? "Memproses..." : children}</Slot.Slottable>
+				<Slot.Slottable>{loading ? "Processing..." : children}</Slot.Slottable>
 				{rightIcon && !loading && (
 					<Slot.Root className={cn(iconVariant({ size }))}>{rightIcon}</Slot.Root>
 				)}

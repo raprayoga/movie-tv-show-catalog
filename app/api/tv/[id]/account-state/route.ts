@@ -14,7 +14,7 @@ export async function GET(
 	}
 
 	const cookieStore = await cookies()
-	const sessionId = cookieStore.get("session_id")?.value
+	const sessionId = cookieStore.get("tmdb_session_id")?.value
 
 	if (!sessionId) {
 		return NextResponse.json({ error: "Not authenticated" }, { status: 401 })

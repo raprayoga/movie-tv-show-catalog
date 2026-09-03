@@ -4,7 +4,6 @@ import * as React from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import {
-	Heart,
 	Search,
 	Menu,
 	Film,
@@ -80,11 +79,10 @@ export function Navbar() {
 	if (isAuthenticated && user) {
 		accountActions = (
 			<div className="items-center gap-2 hidden md:flex">
-				<Button type="button" aria-label="Favorites" variant="text" btnType="primary" size="sm" asChild>
-					<Heart className="h-5 w-5" />
-				</Button>
 				<Button type="button" aria-label="Watchlist" variant="text" btnType="primary" size="sm" asChild>
-					<Bookmark className="h-5 w-5" />
+					<Link href="/watchlist">
+						<Bookmark className="h-5 w-5" />
+					</Link>
 				</Button>
 
 				<DropdownMenu>
@@ -194,11 +192,10 @@ export function Navbar() {
 								key={link.label}
 								href={link.href}
 								onClick={handleMobileMenuClose}
-								className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${
-									pathname === link.href
-										? "bg-primary-lightest text-primary-base"
-										: "text-text-secondary hover:bg-primary-lightest hover:text-primary-base"
-								}`}
+								className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${pathname === link.href
+									? "bg-primary-lightest text-primary-base"
+									: "text-text-secondary hover:bg-primary-lightest hover:text-primary-base"
+									}`}
 							>
 								{link.icon}
 								{link.label}
@@ -207,22 +204,14 @@ export function Navbar() {
 
 						{isAuthenticated && user ? (
 							<>
-								<a
-									href="#"
-									onClick={handleMobileMenuClose}
-									className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-text-secondary transition-colors hover:bg-primary-lightest hover:text-primary-base"
-								>
-									<Heart className="h-5 w-5" />
-									Favorites
-								</a>
-								<a
-									href="#"
+								<Link
+									href="/watchlist"
 									onClick={handleMobileMenuClose}
 									className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-text-secondary transition-colors hover:bg-primary-lightest hover:text-primary-base"
 								>
 									<Bookmark className="h-5 w-5" />
 									Watchlist
-								</a>
+								</Link>
 								<Button
 									type="button"
 									btnType="destructive"
