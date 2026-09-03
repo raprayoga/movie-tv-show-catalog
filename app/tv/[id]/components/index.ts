@@ -1,0 +1,6 @@
+export { default as TVHero } from "./TVHero"
+export { default as CastSection } from "./CastSection"
+export { default as PhotosSection } from "./PhotosSection"
+export { default as DetailsSection } from "./DetailsSection"
+export { default as SeasonsSection } from "./SeasonsSection"
+export { default as TVDetailSkeleton } from "./TVDetailSkeleton"
